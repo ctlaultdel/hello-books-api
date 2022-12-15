@@ -64,3 +64,19 @@ def handle_books():
         })
     # return converted json
     return jsonify(books_response)
+
+# ~~~~~~ single book endpoint ~~~~~~
+@books_bp.route("/<book_id>", methods=["GET"])
+def handle_book():
+    # read book id
+    book_id = int(book_id)
+    # retrieve book details matching book id
+    if book.id == book_id:
+        # return formatted book data
+        return jsonify(
+            {
+            "id": book.id,
+            "title": book.title,
+            "description": book.description
+            }
+            )
