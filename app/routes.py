@@ -1,5 +1,5 @@
 # Blueprint groups related routes (endpoints)
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, abort, make_response
 
 # store Blueprint instances
 # name convention: name related to data being served or functionality provided
@@ -66,17 +66,26 @@ def handle_books():
     return jsonify(books_response)
 
 # ~~~~~~ single book endpoint ~~~~~~
+def validate_book(book_id):
+    try:
+        book_id = int(book_id)
+    except:
+        # abort raises HTTPException 
+        # make_response returns a Flask response object to override html default return by abort
+        abort(make_response({"message":f"book {book_id} invalid"}, 400))
+    for book in books:
+        if book.id == book_id:
+            return book
+    abort(make_response({"message":f"book {book_id} not found"}, 404))
+
 @books_bp.route("/<book_id>", methods=["GET"])
-def handle_book():
-    # read book id
-    book_id = int(book_id)
-    # retrieve book details matching book id
-    if book.id == book_id:
-        # return formatted book data
-        return jsonify(
-            {
-            "id": book.id,
-            "title": book.title,
-            "description": book.description
-            }
-            )
+def handle_book(book_id):
+    book = validate_book(book_id)
+    # jsonify returns an http response object
+    # don't need it here though b/c flask automatically converts dicts into HTTP response bodies
+    # do you need it then if you are returning a list or something
+    return {
+        "id": book.id,
+        "title": book.title,
+        "description": book.description,
+        }
