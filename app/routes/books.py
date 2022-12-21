@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify, make_response, request
 
 books_bp = Blueprint("books", __name__, url_prefix="/books")
 
-@books_bp.route('', methods=["POST"])
+@books_bp.route("", methods=["POST"])
 def create_new_book():
     request_body = request.get_json()
     if "title" not in request_body or "description" not in request_body:
@@ -23,7 +23,7 @@ def create_new_book():
         f"{new_book.title} Successfully Created", 201
     )
 
-@books_bp.route('', methods=["GET"])
+@books_bp.route("", methods=["GET"])
 def read_all_books():
     # query all reports in db using Book instance
     books = Book.query.all()
@@ -36,11 +36,20 @@ def read_all_books():
         })
     return jsonify(books_response), 200
 
-@books_bp.route('/<book_id>', methods=["GET"])
-def read_a_book(book_id):
+@books_bp.route("/<book_id>", methods=["GET"])
+def read_one_book(book_id):
     book = validate_book(book_id)
     return {
         "id": book.id,
         "title": book.title,
         "description": book.description,
     }
+
+@books_bp.route("/<book_id>", methods=["PUT"])
+def update_one_book(book_id):
+    book = validate_book(book_id)
+    request_body = request.json()
+    book.title = request_body["title"]
+    book.description = request_body["description"]
+    db.session.commit()
+    return f"Book #{book.id} Successfully Updated"
