@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 # connection string for finding db
 c_str = 'postgresql+psycopg2://postgres:postgres@localhost:5432/hello_books_development'
 
-# create db & migrate objs
+# create connection point to db as db obj
 db = SQLAlchemy()
 migrate = Migrate()
 
@@ -23,11 +23,7 @@ def create_app(test_config=None):
     migrate.init_app(app, db)
     # import has to happen after db initialized
     from app.models.book import Book
-    
-    # from .routes.hello_world import hello_world_bp
-    # from .routes.books import books_bp
-    # # register blueprint groups related routes/endpoints
-    # app.register_blueprint(hello_world_bp)
-    # app.register_blueprint(books_bp)
-
+    # register blueprint group's related endpoints
+    from app.routes.books import books_bp
+    app.register_blueprint(books_bp)
     return app
