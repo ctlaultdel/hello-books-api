@@ -25,8 +25,14 @@ def create_new_book():
 
 @books_bp.route("", methods=["GET"])
 def read_all_books():
-    # query all reports in db using Book instance
-    books = Book.query.all()
+    # refactor with *kwargs for multiple queries
+    title_query = request.args.get("title")
+    if title_query:
+        books = Book.query.filter_by(title=title_query)
+    else:
+        books = Book.query.all()
+    # syntax for limiting # book records
+    # Book.query.limit(100).all()
     books_response = []
     for book in books:
         books_response.append({
