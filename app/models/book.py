@@ -1,12 +1,9 @@
-# ~~~~~~ Book Class ~~~~~~
-class Book:
-    def __init__(self, id, title, description):
-        self.id = id
-        self.title = title
-        self.description = description
+from app import db
 
-books = [
-    Book(1, "Lollipops in the Rain", "A kids book about eating lollipops in the rain"),
-    Book(2, "Dragons at sunrise", "A fantasy book about a child with a dragon friend"),
-    Book(3, "Mai Tai Anytime", "An adult fiction book about a man who loves drinking Mai Tai's")
-    ]
+# inherits db.Model from SQLAlchemy
+class Book(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    title = db.Column(db.String)
+    description = db.Column(db.String)
+    # link Book model to table in postgres 'books' default=class_name
+    __tablename__ = 'books'
