@@ -48,7 +48,7 @@ def read_one_book(book_id):
 @books_bp.route("/<book_id>", methods=["PUT"])
 def update_one_book(book_id):
     book = validate_book(book_id)
-    request_body = request.json()
+    request_body = request.get_json()
     book.title = request_body["title"]
     book.description = request_body["description"]
     db.session.commit()
