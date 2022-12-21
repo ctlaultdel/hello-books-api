@@ -1,5 +1,6 @@
 from app import db
 from app.models.book import Book
+from app.models.validate_book import validate_book
 from flask import Blueprint, jsonify, make_response, request
 
 books_bp = Blueprint("books", __name__, url_prefix="/books")
@@ -34,3 +35,12 @@ def read_all_books():
             "description": book.description,
         })
     return jsonify(books_response), 200
+
+@books_bp.route('/<book_id>', methods=["GET"])
+def read_a_book(book_id):
+    book = validate_book(book_id)
+    return {
+        "id": book.id,
+        "title": book.title,
+        "description": book.description,
+    }
