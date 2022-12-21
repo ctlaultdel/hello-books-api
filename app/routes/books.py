@@ -52,4 +52,15 @@ def update_one_book(book_id):
     book.title = request_body["title"]
     book.description = request_body["description"]
     db.session.commit()
-    return f"Book #{book.id} Successfully Updated"
+    return make_response(
+        f"Book #{book.id} Successfully Updated"
+    )
+
+@books_bp.route("/<book_id>", methods=["DELETE"])
+def delete_one_book(book_id):
+    book = validate_book(book_id)
+    db.session.delete(book)
+    db.session.commit()
+    return make_response(
+        f"Book #{book.id} Successfully Deleted"
+    )
