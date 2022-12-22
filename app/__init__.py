@@ -7,7 +7,8 @@ c_str = 'postgresql+psycopg2://postgres:postgres@localhost:5432/hello_books_deve
 
 # create connection point to db as db obj
 db = SQLAlchemy()
-migrate = Migrate()
+# compare_type allows you to detect changes in dtype in migrations
+migrate = Migrate(compare_type=True)
 
 def create_app(test_config=None):
     """
