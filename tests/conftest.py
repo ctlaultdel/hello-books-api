@@ -4,6 +4,11 @@ from app import db
 from flask.signals import request_finished
 from app.models.book import Book
 
+# way to configure global variables for use in test_routes
+def pytest_configure():
+    pytest.ocean_book = Book(title="Ocean Book", description="watr 4evr")
+    pytest.mountain_book = Book(title="Mountain Book", description="i luv 2 climb rocks",)
+
 @pytest.fixture
 def app():
     app = create_app({"TESTING": True})
@@ -27,15 +32,7 @@ def app():
 @pytest.fixture
 def two_saved_books(app):
     # Arrange
-    ocean_book = Book(
-        title="Ocean Book",
-        description="watr 4evr",
-    )
-    mountain_book = Book(
-        title="Mountain Book",
-        description="i luv 2 climb rocks",
-    ) 
-    db.session.add_all([ocean_book, mountain_book])
+    db.session.add_all([pytest.ocean_book, pytest.mountain_book])
     # commits & saves books to db
     db.session.commit()
 
