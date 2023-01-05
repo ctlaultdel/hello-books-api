@@ -35,10 +35,9 @@ def two_saved_books(app):
     db.session.add_all([pytest.ocean_book, pytest.mountain_book])
     # commits & saves books to db
     db.session.commit()
-    # might need this refresh in order to get access to an id
-    # try implementing with multiple books
-    db.session.refresh(pytest.ocean_book, ["id"])
-    db.session.refresh(pytest.mountain_book, ["id"])
+    # refresh in order to get access to auto-generated id
+    for book in [pytest.ocean_book, pytest.mountain_book]:
+        db.session.refresh(book, ["id"])
 
 # create test client for making HTTP requests
 @pytest.fixture
